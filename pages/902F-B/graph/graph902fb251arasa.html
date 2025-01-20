@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHECK SHEET</title>
+    <link rel="stylesheet" href="../../../css/button.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@1.0.2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.25/dist/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <div id="content">
+        <!-- Informasi Item -->
+        <div class="item-info">
+            <h1>Kekasaran Seal M20</h1>
+            <div class="info-container">
+                <div class="info-block">
+                    <p><strong>Nama barang:</strong> <span>RAIL, COMMON 902F-B LINE CR-9</span></p>
+                    <p><strong>No. barang:</strong> <span>SM095613-5970</span></p>
+                    <p><strong>Sampling :</strong> <span>n = 1/shift</span></p>
+                </div>
+                <div class="info-block">
+                    <p><strong>Standar:</strong> <span>Max Rz 14</span></p>
+                    <p><strong>Satuan : </strong> <span> Rz 1/1000</span></p>
+                    <p><strong>No. Proses:</strong> <span>#30</span></p>
+                </div>
+                <div class="info-block">
+                    <p><strong>No. Mesin:</strong> <span>IMC - 251</span></p>
+                    <p><strong>No. Dokumen:</strong> <span></span></p>
+                    <p><strong>Alat ukur:</strong> <span>SURFCOM</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Kekasaran dan Range -->
+        <div class="chart-container">
+            <div class="chart-wrapper">
+                <span style="font-size: 50px;">x̄</span>
+                <canvas id="roughnessChart"></canvas>
+            </div>
+            <div class="chart-wrapper">
+                <span style="font-size: 30px;">R</span>
+                <canvas id="rangeChart"></canvas>
+            </div>
+        </div>
+        
+        <!-- Tabel -->
+        <div class="button-row" style="display: flex; justify-content: space-between;">
+            <button id="toggleTableButton">Show Table</button>
+            <button id="noteButton" class="btn noteButton blue-button" style="background-color: #0097fc; color: white; padding: 10px 20px; border-radius: 20px; display: inline-flex; align-items: center;">
+                <img src="../../../gambar/info.png" alt="Logo" style="width: 20px; vertical-align: middle; margin-right: 5px;">
+                Informasi
+            </button>
+        </div>              
+        <div id="table-container" style="display: none;"></div>
+    </div>
+
+    <!-- Tombol Navigasi dan Fungsi -->
+    <div class="button-container">
+        <button onclick="location.href='../../../dashboard.html'" class="btn backToDashboardButton blue-button">Back To Dashboard</button>
+        <button class="btn resetDataButton red-button" id="resetDataButton">Save & Reset Data</button>
+    </div>    
+
+    <script>
+        // Fetch Data
+        async function fetchData() {
+            const response = await fetch('../../../php/fetch_data.php?table=902fb251arasa');
+            const data = await response.json();
+            return data;
+        }
+
+        // Fungsi untuk memformat tanggal agar bisa digunakan di seluruh halaman
+        function formatDate(dateString) {
+                const dateObj = new Date(dateString);
+                const day = dateObj.getDate().toString().padStart(2, '0'); // Menambah 0 jika hari kurang dari 10
+                const month = dateObj.toLocaleString('default', { month: 'short' }); // Nama bulan singkat
+                const year = dateObj.getFullYear().toString().slice(-2); // Dua digit terakhir tahun
+
+                return `${day}-${month}-${year}`; // Hasil: 19-Mar-24
+            }
+
+        // Render Chart
+        async function renderChart() {
+            const data = await fetchData();
+            const ctxRoughness = document.getElementById('roughnessChart').getContext('2d');
+            const ctxRange = document.getElementById('rangeChart').getContext('2d');
+
+            // Mendapatkan label untuk sumbu X yang mencakup informasi tanggal, inspector, leader, dan supervisor
+            const xLabels = data.map(entry => {
+                const rawDate = entry.date || ''; // Memastikan tanggal ada
+                const date = rawDate ? formatDate(rawDate) : ''; // Format atau kosong jika tanggal tidak ada
+                const inspector1 = entry.inspector ? `${entry.inspector}` : '';
+                const inspector2 = entry.inspector2 ? `${entry.inspector2}` : '';
+                const leaderName = entry.leader_name ? `${entry.leader_name}` : '';
+                const supervisorName = entry.supervisor_name ? `${entry.supervisor_name}` : '';
+                // Menggabungkan semua elemen yang tersedia ke dalam satu label dengan baris baru (\n)
+                return [inspector1, inspector2, leaderName, supervisorName, date].filter(Boolean).join('\n');
+            });
+
+            //mendapatkan data lainnya untuk grafik
+            const dates = data.map(entry => entry.date);
+            const hatsumono1 = data.map(entry => entry.hatsumono1);
+            const hatsumono2 = data.map(entry => entry.hatsumono2);
+            const averages = data.map(entry => entry.average);
+            const ranges = data.map(entry => entry.range_value);
+
+            //membuat grafik kekasaran
+            new Chart(ctxRoughness, {
+                type: 'line',
+                data: {
+                    labels: xLabels,
+                    datasets: [
+                        {
+                            label: 'Hatsumono 1',
+                            data: hatsumono1,
+                            borderColor: 'rgba(128, 128, 128, 1)',
+                            borderWidth: 1,
+                            pointStyle: 'rect',
+                            pointRadius: 5,
+                            pointBackgroundColor: 'rgba(128, 128, 128, 1)',
+                            fill: false,
+                            showLine: false
+                        },
+                        {
+                            label: 'Hatsumono 2',
+                            data: hatsumono2,
+                            borderColor: 'rgba(30, 144, 255, 1)',
+                            borderWidth: 1,
+                            pointStyle: 'triangle',
+                            pointRadius: 5,
+                            pointBackgroundColor: 'rgba(30, 144, 255, 1)',
+                            fill: false,
+                            showLine: false
+                        },
+                        {
+                            label: 'Average',
+                            data: averages,
+                            borderColor: 'rgba(0, 255, 0, 1)',
+                            borderWidth: 1,
+                            pointStyle: 'circle',
+                            pointRadius: 5,
+                            pointBackgroundColor: 'rgba(0, 255, 0, 1)',
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, max: 17, ticks: { stepSize: 0.5 } },
+                        x: {
+                            ticks:{
+                                autoSkip: false,
+                                padding: 10,
+                                callback: function(value, index, values) {
+                                    return xLabels[index].split('\n');
+                                },
+                                maxRotation: 15,
+                                minRotation: 0,
+                                offset: true
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { usePointStyle: true } },
+                        tooltip: {
+                            callbacks: {
+                                beforeBody: function(tooltipItems) {
+                                    // Mengambil data label yang sesuai
+                                    const index = tooltipItems[0].dataIndex; // Indeks data
+                                    const inspector1 = data[index].inspector || '';
+                                    const inspector2 = data[index].inspector2 || '';
+                                    const leaderName = data[index].leader_name || '';
+                                    const supervisorName = data[index].supervisor_name || '';
+
+                                    // Membuat string keterangan
+                                    return [
+                                        `Shift 1: ${inspector1}`,
+                                        `Shift 2: ${inspector2}`,
+                                        `Leader: ${leaderName}`,
+                                        `Supervisor: ${supervisorName}`
+                                    ];
+                                }
+                            }
+                        },
+                        annotation: {
+                            annotations: {
+                                line1: {
+                                    type: 'line',
+                                    yMin: 14,
+                                    yMax: 14,
+                                    borderColor: 'rgba(255, 0, 0, 1)',
+                                    borderWidth: 2,
+                                    borderDash: [5, 5],
+                                    label: {
+                                        content: 'SU',
+                                        enabled: true,
+                                        position: 'start',
+                                        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                                        color: 'rgba(255, 0, 0, 1)',
+                                        xAdjust: -10,
+                                        yAdjust: -10
+                                    }
+                                },
+                                line2: {
+                                    type: 'line',
+                                    yMin: 12,
+                                    yMax: 12,
+                                    borderColor: 'rgba(0, 0, 255, 1)',
+                                    borderWidth: 2,
+                                    borderDash: [10, 5],
+                                    label: {
+                                        content: 'UCL',
+                                        enabled: true,
+                                        position: 'start',
+                                        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                                        color: 'rgba(0, 0, 255, 1)',
+                                        xAdjust: -10,
+                                        yAdjust: -10
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+
+            //membuat grafik range
+            new Chart(ctxRange, {
+                type: 'line',
+                data: {
+                    labels: xLabels, // Menggunakan xLabels yang sama
+                    datasets: [
+                        {
+                            label: 'Range',
+                            data: ranges,
+                            borderColor: 'rgba(0, 255, 0, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, max: 14, ticks: { stepSize: 1 } },
+                        x: {
+                            ticks: {
+                                autoSkip: false,
+                                padding: 10,
+                                callback: function (value, index, values) {
+                                    return xLabels[index].split('\n');
+                                },
+                                maxRotation: 15,
+                                minRotation: 0,
+                                offset: true
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { usePointStyle: true } },
+                        tooltip: {
+                            callbacks: {
+                                beforeBody: function (tooltipItems) {
+                                    // Mengambil data label yang sesuai
+                                    const index = tooltipItems[0].dataIndex; // Indeks data
+                                    const inspector1 = data[index].inspector || '';
+                                    const inspector2 = data[index].inspector2 || '';
+                                    const leaderName = data[index].leader_name || '';
+                                    const supervisorName = data[index].supervisor_name || '';
+
+                                    // Membuat string keterangan
+                                    return [
+                                        `Shift 1: ${inspector1}`,
+                                        `Shift 2: ${inspector2}`,
+                                        `Leader: ${leaderName}`,
+                                        `Supervisor: ${supervisorName}`
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+
+            renderTable(data);
+        }
+
+        // Render Table
+        function renderTable(data) {
+            const tableContainer = document.getElementById('table-container');
+            let tableHTML = '<table><tr><th>No</th><th>Date</th><th>Hatsumono 1</th><th>Hatsumono 2</th><th>Average</th><th>Range</th><th>Inspector 1</th><th>Inspector 2</th><th>Leader Name</th><th>Supervisor Name</th><th>Notes Keabnormalan</th></tr>';
+
+            data.forEach((entry, index) => {
+                const formattedDate = formatDate(entry.date ?? '');
+                tableHTML += `<tr>
+                                <td>${index + 1}</td>
+                                <td>${formattedDate}</td>
+                                <td>${entry.hatsumono1 ?? ''}</td>
+                                <td>${entry.hatsumono2 ?? ''}</td>
+                                <td>${entry.average ?? ''}</td>
+                                <td>${entry.range_value ?? ''}</td>
+                                <td>${entry.inspector ?? ''}</td>
+                                <td>${entry.inspector2 ?? ''}</td>
+                                <td>${entry.leader_name ?? ''}</td>
+                                <td>${entry.supervisor_name ?? ''}</td>
+                                <td>${entry.notes_keabnormalan ?? ''}</td>
+                            </tr>`;
+            });
+
+            tableHTML += '</table>';
+            tableContainer.innerHTML = tableHTML;
+        }
+
+        document.addEventListener('DOMContentLoaded', renderChart);
+
+        document.getElementById('noteButton').addEventListener('click', function () {
+        Swal.fire({
+            title: 'Panduan Penggunaan',
+            html: `
+                <p>Berikut adalah catatan panduan tentang penggunaan halaman ini:</p>
+                <ul style="text-align: left;">
+                    <li>Back to Dashboard : <br>untuk kembali ke halaman awal dashboard.</li>
+                    <li>Save Check Sheet : <br>untuk menyimpan check sheet dalam bentuk pdf. Pastikan sebelum save check sheet
+                        data yang diinput sudah benar selama satu bulan.    
+                    </li>
+                    <li>Reset Data : <br>untuk menghapus data yang sudah diinput. Data bisa dihapus hanya ketika sudah mencapai 
+                        batas maksimal. Jika data belum mencapai batas maksimal reset data tidak akan berfungsi (maks 25 data).
+                    </li>
+                    <li>Show Table : <br>untuk memunculkan rekapan data yang sudah diinput dalam bentuk tabel.</li>
+                    <li>Informasi : <br>berisi penjelasan atau fungsi dari setiap menu yang tersedia.</li>
+                    <li>Pastikan data yang diinput sudah benar sebelum disimpan.</li>
+                    <li>Gunakan grafik untuk memantau tren dan kualitas data.</li>
+                    <li>Reset data setelah mencapai batas maksimal.</li>
+                    <li><bold>Jangan lupa SHOW TABLE terlebih dahulu pada saat akan save check sheet.</bold></li>
+                </ul>
+            `,
+            icon: 'info',
+            width: '1000px',
+            confirmButtonText: 'Tutup'
+        });
+    }); 
+    </script>
+    <script src="../../../js/graph.js"></script>
+</body>
+</html>
