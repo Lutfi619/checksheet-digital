@@ -1,0 +1,159 @@
+/* Gaya CSS untuk form laporan ke leader */
+#reportOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+#reportOverlay .popup-form {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    background-color: rgb(73, 198, 255);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+#reportOverlay h2 {
+    font-size: 1.5em;
+    color: rgb(27, 27, 27);
+    margin-bottom: 10px;
+}
+
+#reportOverlay label {
+    font-size: 1em;
+    color: rgb(32, 29, 29);
+    margin-top: 10px;
+    font-weight: bold;
+    display: block;
+    text-align: left;
+}
+
+#reportOverlay input[type="date"],
+#reportOverlay textarea {
+    width: 95%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 1px;
+    font-size: 1em;
+}
+
+#reportOverlay button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1em;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#reportOverlay button:hover {
+    background-color: #0056b3;
+}
+
+#reportOverlay .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 2em;
+    cursor: pointer;
+    color: red;
+}
+
+#reportOverlay {
+    display: none; /* Menyembunyikan form secara default */
+}
+
+/* Gaya untuk input form report_line dan report_part */
+#report_line, #report_part {
+    width: 100%; /* Lebar penuh */
+    padding: 8px; /* Padding untuk ruang di dalam input */
+    margin-bottom: 15px; /* Jarak antara input */
+    border: 1px solid #ccc; /* Border abu-abu */
+    border-radius: 4px; /* Sudut melengkung */
+    font-size: 14px; /* Ukuran font */
+    box-sizing: border-box; /* Agar padding masuk ke dalam ukuran elemen */
+}
+
+/* Gaya untuk dropdown (select) agar konsisten dengan input lainnya */
+select {
+    width: 100%; /* Lebar penuh */
+    padding: 8px; /* Padding untuk ruang di dalam input */
+    margin-bottom: 15px; /* Jarak antara input */
+    border: 1px solid #ccc; /* Border abu-abu */
+    border-radius: 4px; /* Sudut melengkung */
+    font-size: 14px; /* Ukuran font */
+    box-sizing: border-box; /* Agar padding masuk ke dalam ukuran elemen */
+}
+
+/* Menyembunyikan submenu secara default */
+.submenu {
+    display: none;
+    position: relative;
+    top: 100%; /* Tepat di bawah tombol has-submenu */
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    min-width: 150px; /* Sesuaikan sesuai kebutuhan */
+}
+
+/* Menampilkan submenu saat aktif */
+.submenu.active {
+    display: block;
+}
+
+.notification-popup {
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background: rgb(255, 255, 255);
+border: 1px solid #ccc;
+padding: 20px;
+z-index: 1000;
+text-align: center;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.notification-popup button {
+margin-top: 10px;
+padding: 5px 10px;
+background: #007bff;
+color: white;
+border: none;
+border-radius: 3px;
+cursor: pointer;
+}
+
+.notification-popup button:hover {
+background: #0056b3;
+}
+
+.content-section {
+visibility: hidden; /* Sembunyikan secara visual */
+opacity: 0; /* Tidak terlihat */
+height: 0; /* Hindari memakan ruang */
+overflow: hidden; /* Hilangkan elemen yang meluap */
+transition: visibility 0s, opacity 0.3s ease-in-out, height 0.3s ease-in-out; /* Animasi */
+}
+
+.content-section.active {
+visibility: visible; /* Tampilkan elemen */
+opacity: 1; /* Pastikan terlihat */
+height: auto; /* Sesuaikan dengan konten */
+}

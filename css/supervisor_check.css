@@ -1,0 +1,137 @@
+/* Reset some default browser styles */
+body, h1, h2, h3, h4, h5, h6, p, a, ul, li, form, input, label, table, th, td, select, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* General body styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Container styling */
+.container {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 40px; /* Perbesar padding agar ruang di dalam container lebih luas */
+    width: 100%;
+    max-width: 1250px; /* Perbesar lebar maksimal */
+}
+
+/* Header styling */
+h1 {
+    font-size: 2rem;
+    color: #007bff;
+    margin-bottom: 20px;
+}
+
+/* Form styling */
+form {
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input[type="text"], input[type="date"], select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button[type="submit"] {
+    background: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+button[type="submit"]:hover {
+    background: #0056b3;
+}
+
+/* Link button styling */
+.button-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.button-container .btn {
+    background: #28a745;
+    color: #ffffff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+    display: inline-block;
+    font-size: 1rem;
+}
+
+.button-container .btn:hover {
+    background: #218838;
+}
+
+/* Success and error messages styling */
+.success {
+    color: #28a745;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.error {
+    color: #dc3545;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+/* Info message styling */
+.info {
+    color: #6c757d;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 15px; /* Tambah padding untuk memberikan ruang lebih */
+    text-align: left;
+}
+
+th {
+    background-color: #f4f4f4;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
