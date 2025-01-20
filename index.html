@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/report.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Quality Control Member</h2>
+        <div class="profile-section">
+        </div>
+        <ul>
+            <li><a href="#" onclick="showDashboardInfo()">Informasi Dashboard</a></li>
+            <li><a href="#" onclick="openReportForm()">Laporan ke Leader</a></li>
+            <li><a href="#" onclick="showContent('common-rail')">Common Rail</a></li>
+            <li><a href="#" onclick="showContent('noncommon-rail')">Non Common Rail</a></li>
+        </ul>
+    </div>
+
+    <script>
+        function openReportForm() {
+            document.getElementById("reportOverlay").style.display = "flex";
+        }
+
+        function closeReportForm() {
+            document.getElementById("reportOverlay").style.display = "none";
+        }
+
+        function showContent(sectionId) {
+            // Sembunyikan semua konten
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active'); // Hilangkan kelas 'active'
+            });
+
+            // Tampilkan konten yang dipilih
+            const selectedSection = document.getElementById(sectionId);
+            if (selectedSection) {
+                selectedSection.classList.add('active'); // Tambahkan kelas 'active'
+            }
+        }
+    </script>
+
+    <!-- Form Modal Laporan ke Leader -->
+    <div class="overlay" id="reportOverlay">
+        <div class="popup-form">
+            <span class="close-btn" onclick="closeReportForm()">&times;</span>
+            <h2>Form Laporan ke Leader</h2>
+            <form id="reportForm">
+                <label for="report_date">Tanggal:</label>
+                <input type="date" id="report_date" name="report_date" required>
+                
+                <label for="report_line">Line:</label>
+                <select id="report_line" name="report_line" required>
+                    <option value="">Pilih Line</option>
+                    <option value="CR1">CR1</option>
+                    <option value="CR2">CR2</option>
+                    <option value="CR3">CR3</option>
+                    <option value="CR4">CR4</option>
+                    <option value="CR5">CR5</option>
+                    <option value="CR6">CR6</option>
+                    <option value="CR7">CR7</option>
+                    <option value="CR8">CR8</option>
+                    <option value="CR9">CR9</option>
+                    <option value="CR10">CR10</option>
+                    <option value="CR11">CR11</option>
+                    <option value="CR12">CR12</option>
+                </select>
+                
+                <label for="report_part">Nama Part:</label>
+                <input type="text" id="report_part" name="report_part" placeholder="Masukkan Nama Part" required>
+                
+                <label for="report_desc">Deskripsi Laporan:</label>
+                <textarea id="report_desc" name="report_desc" rows="4" required></textarea>
+                
+                <button type="submit">Kirim Laporan</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Popup Notifikasi -->
+    <div class="notification-popup" id="notificationPopup" style="display: none;">
+        <p id="notificationMessage"></p>
+        <button onclick="closeNotification()">OK</button>
+    </div>
+
+    <div class="main-content">
+        <div id="common-rail" class="content-section">
+            <div class="header">
+                <h1>Common Rail - Input Data Check Sheet Digital</h1>
+            </div>
+            <div class="content">
+                <div class="card">
+                    <h3>LINE CR-1</h3>
+                    <p>SOON...</p>
+                </div>
+                <div class="card">
+                    <h3>Line CR-2</h3>
+                    <div class="dropdown">
+                        <button class="dropdown-btn" data-dropdown-id="902fA" onclick="toggleDropdown('902fA')">902F LINE CR-2</button>
+                        <div class="dropdown-content" id="902fA">
+                            <div class="nested-dropdown">
+                                <button class="has-submenu" data-submenu-id="902fA-20" onclick="toggleSubmenu('902fA-20')">#20</button>
+                                <div class="submenu" id="902fA-20">
+                                    <a href="pages/902F-A/idh-46.php">IDH - 46</a>
+                                </div>
+                                <button class="has-submenu" data-submenu-id="902fA-30" class="has-submenu" onclick="toggleSubmenu('902fA-30')">#30</button>
+                                <div class="submenu" id="902fA-30">
+                                    <a href="pages/902F-A/107.php">IMC - 107</a>
+                                    <a href="pages/902F-A/108.php">IMC - 108</a>
+                                </div>
+                                <button class="has-submenu" data-submenu-id="902fA-70" onclick="toggleSubmenu('902fA-70')">#70</button>
+                                <div class="submenu" id="902fA-70">
+                                    <a href="pages/902F-A/109.php">IMC - 109</a>
+                                    <a href="pages/902F-A/110.php">IMC - 110</a>
+                                </div>
+                                <button class="has-submenu" data-submenu-id="902fA-80" onclick="toggleSubmenu('902fA-80')">#80</button>
+                                <div class="submenu" id="902fA-80">
+                                    <a href="pages/902F-A/111.php">IMC - 111</a>
+                                    <a href="pages/902F-A/112.php">IMC - 112</a>
+                                    <a href="pages/902F-A/113.php">IMC - 113</a>
+                                    <a href="pages/902F-A/114.php">IMC - 114</a>
+                                    <a href="pages/902F-A/115.php">IMC - 115</a>
+                                    <a href="pages/902F-A/116.php">IMC - 116</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Line CR-3</h3>
+                    <p>SOON...</p>
+                </div>
+                <div class="card">
+                    <h3>Line CR-4</h3>
+                    <p>SOON...</p>
+                </div>
+                <div class="card">
+                    <h3>Line CR-5</h3>
+                    <p>SOON...</p>
+                </div>
+                <div class="card">
+                    <h3>Line CR-6</h3>
+                    <p>SOON...</p>
+                </div>
+                <div class="card">
+                    <h3>Line CR-7</h3>
+                    <p>SOON...</p>
+                </div>
+                <div class="card">
+                    <h3>Line CR-8</h3>
+                    <p>SOON...</p>
+                </div>
+                <div class="card">
+                    <h3>Line CR-9</h3>
+                    <div class="dropdown">
+                        <button class="dropdown-btn" data-dropdown-id="gd-line-cr9" onclick="toggleDropdown('gd-line-cr9')">GD LINE CR-9</button>
+                        <div class="dropdown-content" id="gd-line-cr9">
+                            <div class="nested-dropdown">
+                                <button class="has-submenu" data-submenu-id="gd-20" onclick="toggleSubmenu('gd-20')">#20</button>
+                                <div class="submenu" id="gd-20">
+                                    <a href="pages/GDLINECR9/idh-25.php">IDH-25</a>
+                                </div>
+                                <button class="has-submenu" data-submenu-id="gd-30" onclick="toggleSubmenu('gd-30')">#30</button>
+                                <div class="submenu" id="gd-30">
+                                    <a href="pages/GDLINECR9/imc-12.php">IMC-12</a>
+                                    <a href="pages/GDLINECR9/imc-61.php">IMC-61</a>
+                                </div>
+                                <button class="has-submenu" data-submenu-id="gd-70" onclick="toggleSubmenu('gd-70')">#70</button>
+                                <div class="submenu" id="gd-70">
+                                    <a href="pages/GDLINECR9/imc-94.php">IMC-94</a>
+                                    <a href="pages/GDLINECR9/imc-103.php">IMC-103</a>
+                                </div>
+                                <button class="has-submenu" data-submenu-id="gd-80" onclick="toggleSubmenu('gd-80')">#80</button>
+                                <div class="submenu" id="gd-80">
+                                    <a href="pages/GDLINECR9/imc-19.php">IMC-19</a>
+                                    <a href="pages/GDLINECR9/imc-20.php">IMC-20</a>
+                                    <a href="pages/GDLINECR9/imc-21.php">IMC-21</a>
+                                    <a href="pages/GDLINECR9/imc-28.php">IMC-28</a>
+                                    <a href="pages/GDLINECR9/imc-29.php">IMC-29</a>
+                                    <a href="pages/GDLINECR9/imc-40.php">IMC-40</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <button class="dropdown-btn" data-dropdown-id="902fB" onclick="toggleDropdown('902fB')">902F LINE CR-9</button>
+                        <div class="dropdown-content" id="902fB">
+                            <div class="nested-dropdown">
+                                <button class="has-submenu" data-submenu-id="902fB-20" onclick="toggleSubmenu('902fB-20')">#20</button>
+                                <div class="submenu" id="902fB-20">
+                                    <a href="pages/902F-B/idh-23.php">IDH - 23</a>
+                                </div>
+                                <button class="has-submenu" data-submenu-id="902fB-30" class="has-submenu" onclick="toggleSubmenu('902fB-30')">#30</button>
+                                <div class="submenu" id="902fB-30">
+                                    <a href="pages/902F-B/imc-251.php">IMC - 251</a>
+                                    <a href="pages/902F-B/902FB-61.php">IMC - 61</a>
+                                </div>
+                                <button class="has-submenu" data-submenu-id="902fB-70" onclick="toggleSubmenu('902fB-70')">#70</button>
+                                <div class="submenu" id="902fB-70">
+                                    <a href="option-a.html">Option A</a>
+                                </div>
+                                <button class="has-submenu" data-submenu-id="902fB-80" onclick="toggleSubmenu('902fB-80')">#80</button>
+                                <div class="submenu" id="902fB-80">
+                                    <a href="option-a.html">Option A</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <h3>Line CR-10</h3>
+                    <p>SOON...</p>
+                </div>
+                <div class="card">
+                    <h3>Line CR-11</h3>
+                    <p>SOON...</p>
+                </div>
+                <div class="card">
+                    <h3>Line CR-12</h3>
+                    <p>SOON...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content NR -->
+        <div id="noncommon-rail" class="content-section">
+        <div class="header">
+            <h1>Non Common Rail - Input Data Check Sheet Digital</h1>
+        </div>
+        <div class="content">
+            <div class="card">
+                <h3>Housing Water Inlet</h3>
+                <p>SOON...</p>
+            </div>
+            <div class="card">
+                <h3>Balance Shaft</h3>
+                <p>SOON...</p>
+            </div>
+            <div class="card">
+                <h3>Cam Housing</h3>
+                <p>SOON...</p>
+            </div>
+        </div>
+    </div>
+    <script src="js/dashboard.js"></script>
+    <script src="js/report.js"></script>
+</body>
+</html>
